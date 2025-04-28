@@ -1,12 +1,8 @@
+import { getData } from "@/actions/page";
 import { HorariosList } from "@/components/HorariosList";
-import { prisma } from "@/lib/prisma";
 
 export default async function Home() {
-    const data = await prisma.dia.findMany({
-        include: {
-            horarios: true,
-        },
-    });
+    const data = await getData();
 
     const getMes = (data: number) => {
         const mesesDoAno = [
