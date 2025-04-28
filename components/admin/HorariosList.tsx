@@ -2,6 +2,9 @@ import { ButtonActionReset } from "@/components/admin/ButtonActionReset";
 import { prisma } from "@/lib/prisma";
 import { resetSemana } from "@/lib/resetSemana";
 import { Dia } from "./Dia";
+
+export const dynamic = "force-dynamic";
+
 export async function HorariosList() {
     let semana = null;
     try {
