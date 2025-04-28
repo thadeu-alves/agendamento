@@ -1,36 +1,12 @@
-import { Horario } from "@/components/Horario";
 import { HorariosList } from "@/components/HorariosList";
-
-type Horario = {
-    id: string;
-    hora_inicio: string;
-    preenchido: boolean;
-};
-
-type Dia = {
-    id: string;
-    data: string;
-    semanaId: number;
-    horarios: Horario[];
-};
+import { prisma } from "@/lib/prisma";
 
 export default async function Home() {
-    const res = await fetch(
-        `${process.env.NEXT_URL}/api/dias`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                all: false,
-            }),
-            next: {
-                tags: ["get-horarios"],
-            },
-        }
-    );
-    const data = (await res.json()) || [];
+    const data = await prisma.dia.findMany({
+        include: {
+            horarios: true,
+        },
+    });
 
     const getMes = (data: number) => {
         const mesesDoAno = [
@@ -68,7 +44,7 @@ export default async function Home() {
                         hoje:
                     </h1>
                 </li>
-                {data.map((dia: Dia, id: number) => {
+                {data.map((dia, id) => {
                     return (
                         <HorariosList
                             dia={dia}

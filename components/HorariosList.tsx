@@ -5,12 +5,16 @@ type Horario = {
     id: string;
     hora_inicio: string;
     preenchido: boolean;
+    nome_cliente: string | null;
+    telefone: string | null;
+    observacao: string | null;
+    diaId: string;
 };
 
 type Dia = {
     id: string;
-    data: string;
-    semanaId: number;
+    data: Date;
+    semanaId: string;
     horarios: Horario[];
 };
 
@@ -21,7 +25,7 @@ export function HorariosList({
     dia: Dia;
     id: number;
 }) {
-    const getDiaSemana = (data: string) => {
+    const getDiaSemana = (data: Date) => {
         const diasDaSemana = [
             "Domingo",
             "Segunda-feira",
