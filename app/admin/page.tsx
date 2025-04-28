@@ -1,5 +1,7 @@
 import { HorariosList } from "@/components/admin/HorariosList";
 
+export const dynamic = "force-dynamic";
+
 export default async function Admin() {
     const getMes = (data: number) => {
         const mesesDoAno = [
@@ -37,5 +39,3 @@ export default async function Admin() {
         </section>
     );
 }
-
-export const revalidate = 1;
