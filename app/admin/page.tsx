@@ -37,3 +37,5 @@ export default async function Admin() {
         </section>
     );
 }
+
+export const revalidate = 1;
