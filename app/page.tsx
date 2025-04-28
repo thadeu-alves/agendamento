@@ -16,7 +16,7 @@ type Dia = {
 
 export default async function Home() {
     const res = await fetch(
-        "http://localhost:3000/api/dias",
+        `${process.env.NEXT_URL}/api/dias`,
         {
             method: "POST",
             headers: {

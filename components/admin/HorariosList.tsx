@@ -2,20 +2,24 @@ import { ButtonActionReset } from "@/components/admin/ButtonActionReset";
 import { prisma } from "@/lib/prisma";
 import { resetSemana } from "@/lib/resetSemana";
 import { Dia } from "./Dia";
-
 export async function HorariosList() {
-    const semana = await prisma.semana.findFirst({
-        where: {
-            slug: "dev",
-        },
-        include: {
-            dias: {
-                include: {
-                    horarios: true,
+    let semana = null;
+    try {
+        semana = await prisma.semana.findFirst({
+            where: {
+                slug: "dev",
+            },
+            include: {
+                dias: {
+                    include: {
+                        horarios: true,
+                    },
                 },
             },
-        },
-    });
+        });
+    } catch (error) {
+        console.error("Erro ao buscar semanas:", error);
+    }
 
     const getDiaSemana = (data: Date) => {
         const diasDaSemana = [
