@@ -1,25 +1,30 @@
 import { ButtonActionReset } from "@/components/admin/ButtonActionReset";
-import { prisma } from "@/lib/prisma";
-import { resetSemana } from "@/lib/resetSemana";
 import { Dia } from "./Dia";
+import { Dia as DiaProps } from "@/app/page";
+import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
 export async function HorariosList() {
-    let semana = null;
+    let data = null;
     try {
-        semana = await prisma.semana.findFirst({
-            where: {
-                slug: "dev",
-            },
-            include: {
-                dias: {
-                    include: {
-                        horarios: true,
-                    },
+        const res = await fetch(
+            `${process.env.NEXT_URL}/api/dias`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
                 },
-            },
-        });
+                body: JSON.stringify({
+                    all: true,
+                }),
+                next: {
+                    tags: ["get-horarios"],
+                },
+            }
+        );
+
+        data = (await res.json()) || [];
     } catch (error) {
         console.error("Erro ao buscar semanas:", error);
     }
@@ -38,6 +43,17 @@ export async function HorariosList() {
         return diasDaSemana[date.getDay()];
     };
 
+    async function handleReset() {
+        "use server";
+        await fetch(`${process.env.NEXT_URL}/api/reset`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        revalidateTag("get-horarios");
+    }
+
     return (
         <ul className="bg-white p-4 space-y-8 rounded-xl">
             <li className="space-y-4">
@@ -50,7 +66,7 @@ export async function HorariosList() {
                 </h2>
             </li>
 
-            {semana?.dias.map((dia) => {
+            {data.map((dia: DiaProps) => {
                 const diaSemana = getDiaSemana(dia.data);
                 return (
                     <Dia
@@ -66,7 +82,7 @@ export async function HorariosList() {
                 <ButtonActionReset
                     callBack={async () => {
                         "use server";
-                        resetSemana(semana?.slug || "");
+                        handleReset();
                     }}
                     className="block bg-red-500 p-2 mt-8 rounded text-white mx-auto"
                 >

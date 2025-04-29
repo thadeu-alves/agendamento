@@ -1,7 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import {
     AlertDialog,
     AlertDialogAction,
@@ -34,8 +32,6 @@ export function Horario({
     id: string;
     handlePreencher: (data: handlePreencherProps) => void;
 }) {
-    const router = useRouter();
-
     function handleAgendar() {
         handlePreencher({
             id,
@@ -44,14 +40,13 @@ export function Horario({
             observacao: "Esta é minha observação",
         });
         setTimeout(() => {
-            router.refresh();
-        }, 100);
-        router.refresh();
+            window.location.reload();
+        }, 200);
     }
 
     if (preenchido) {
         return (
-            <div className="flex bg-indigo-400 transition-all ease-in-out px-4 py-2 w-full rounded-2xl text-white h-full">
+            <div className="flex bg-indigo-700 transition-all ease-in-out px-4 py-2 w-full rounded-2xl text-white h-full">
                 <div className="flex items-center w-full">
                     <div className="border-r-2 border-r-white h-8 flex items-center px-4 py-6">
                         <h1 className="font-bold">
@@ -100,7 +95,7 @@ export function Horario({
                         Cancelar
                     </AlertDialogCancel>
                     <AlertDialogAction
-                        className="bg-indigo-500 text-white flex-1"
+                        className="bg-indigo-700 text-white flex-1 p-2 rounded border border-indigo-50"
                         onClick={handleAgendar}
                     >
                         Agendar

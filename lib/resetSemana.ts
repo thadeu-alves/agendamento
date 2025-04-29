@@ -48,42 +48,14 @@ export async function resetSemana(slug: string) {
         },
     });
 
-    const horariosPadrao = [
-        "09:00",
-        "11:00",
-        "14:00",
-        "16:00",
-    ];
-
     const dataDoDia = new Date(inicioSemana);
     for (let i = 0; i < 7; i++) {
-        const diaCriado = await prisma.dia.create({
+        await prisma.dia.create({
             data: {
                 data: new Date(dataDoDia),
                 semanaId: novaSemana.id,
             },
         });
-
-        const diaDaSemana = dataDoDia.getDay();
-        const diaJaPassou = dataDoDia < hoje;
-
-        const deveCriarHorarios =
-            diaDaSemana >= 1 &&
-            diaDaSemana <= 5 &&
-            !diaJaPassou;
-
-        if (deveCriarHorarios) {
-            await prisma.$transaction(
-                horariosPadrao.map((hora) =>
-                    prisma.horario.create({
-                        data: {
-                            hora_inicio: hora,
-                            diaId: diaCriado.id,
-                        },
-                    })
-                )
-            );
-        }
 
         dataDoDia.setDate(dataDoDia.getDate() + 1);
     }

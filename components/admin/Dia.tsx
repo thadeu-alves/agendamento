@@ -1,6 +1,7 @@
 import { HorarioAdmin } from "@/components/admin/HorarioAdmin";
 import { ButtonActionAdd } from "@/components/ButtonAction";
 import { prisma } from "@/lib/prisma";
+import { revalidateTag } from "next/cache";
 import Image from "next/image";
 
 interface DiaProps {
@@ -34,6 +35,7 @@ export function Dia({ id, diaSemana, horarios }: DiaProps) {
                 observacao: null,
             },
         });
+        revalidateTag("get-horarios");
     }
 
     async function handleExcluirHorario({
@@ -45,6 +47,7 @@ export function Dia({ id, diaSemana, horarios }: DiaProps) {
         await prisma.horario.delete({
             where: { id },
         });
+        revalidateTag("get-horarios");
     }
     return (
         <li
@@ -85,6 +88,7 @@ export function Dia({ id, diaSemana, horarios }: DiaProps) {
                                 horario?.horario || "00:00",
                         },
                     });
+                    revalidateTag("get-horarios");
                 }}
                 className="block mt-4 bg-indigo-700 text-white p-2 rounded w-fit md:col-span-2 lg:col-span-4"
             >

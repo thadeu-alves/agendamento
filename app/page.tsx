@@ -1,10 +1,40 @@
-import { getData } from "@/actions/page";
 import { HorariosList } from "@/components/HorariosList";
 
-export const dynamic = "force-dynamic";
+export interface Horario {
+    id: string;
+    preenchido: boolean;
+    nome_cliente: string;
+    hora_inicio: string;
+    telefone: string;
+    observacao: string;
+    diaId: string;
+}
+
+export interface Dia {
+    id: string;
+    data: Date;
+    semanaId: string;
+    horarios: Horario[];
+}
 
 export default async function Home() {
-    const data = await getData();
+    const res = await fetch(
+        `${process.env.NEXT_URL}/api/dias`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                all: false,
+            }),
+            next: {
+                tags: ["get-horarios"],
+            },
+        }
+    );
+
+    const data = (await res.json()) || [];
 
     const getMes = (data: number) => {
         const mesesDoAno = [
@@ -31,6 +61,9 @@ export default async function Home() {
     return (
         <div className="bg-indigo-700 space-y-4">
             <div className="pt-4">
+                <h1 className=" text-white text-center text-2xl px-4 font-bold md:py-8">
+                    Instituição
+                </h1>
                 <h2 className="text-center text-indigo-100 italic">
                     {month}, {year}
                 </h2>
@@ -42,7 +75,7 @@ export default async function Home() {
                         hoje:
                     </h1>
                 </li>
-                {data.map((dia, id) => {
+                {data.map((dia: Dia, id: number) => {
                     return (
                         <HorariosList
                             dia={dia}

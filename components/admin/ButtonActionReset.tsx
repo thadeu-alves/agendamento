@@ -2,15 +2,14 @@
 
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
+    AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
-import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
 
 export function ButtonActionReset({
     children,
@@ -23,6 +22,10 @@ export function ButtonActionReset({
 }>) {
     function handleAction() {
         callBack();
+        alert("Resetando Semana");
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
     }
 
     return (
@@ -44,13 +47,15 @@ export function ButtonActionReset({
                         Cancelar
                     </AlertDialogCancel>
 
-                    <AlertDialogAction
-                        className="bg-red-500 text-white flex-1"
-                        onClick={handleAction}
+                    <button
+                        className="bg-red-500 text-white flex-1 py-2 border border-red-950 rounded"
+                        onClick={() => {
+                            handleAction();
+                        }}
                         type="submit"
                     >
                         Resetar
-                    </AlertDialogAction>
+                    </button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
