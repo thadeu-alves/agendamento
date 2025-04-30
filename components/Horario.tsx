@@ -29,7 +29,7 @@ export function Horario({
 }: {
     preenchido: boolean;
     hora_inicio: string;
-    id?: string;
+    id: string;
     handlePreencher: (data: handlePreencherProps) => void;
 }) {
     function handleAgendar() {
