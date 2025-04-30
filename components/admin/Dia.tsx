@@ -1,8 +1,8 @@
+"use client";
 import { HorarioAdmin } from "@/components/admin/HorarioAdmin";
-import { ButtonActionAdd } from "@/components/ButtonAction";
-import { prisma } from "@/lib/prisma";
-import { revalidateTag } from "next/cache";
+import { ButtonActionAdd } from "@/components/admin/ButtonAction";
 import Image from "next/image";
+import { Horario } from "@/app/page";
 
 interface DiaProps {
     id: string;
@@ -16,38 +16,36 @@ interface DiaProps {
         nome_cliente: string | null;
         diaId: string;
     }[];
+    onAddHorario: (horario: Horario) => void;
+    onRemoveHorario: (data: {
+        diaId: string;
+        horarioId: string;
+    }) => void;
 }
 
-export function Dia({ id, diaSemana, horarios }: DiaProps) {
+export function Dia({
+    id,
+    diaSemana,
+    horarios,
+    onAddHorario,
+    onRemoveHorario,
+}: DiaProps) {
     async function handleResetHorario({
         id,
     }: {
         id: string;
     }) {
-        "use server";
-
-        await prisma.horario.update({
-            where: { id },
-            data: {
-                preenchido: false,
-                nome_cliente: null,
-                telefone: null,
-                observacao: null,
-            },
-        });
-        revalidateTag("get-horarios");
+        console.log(id);
     }
 
     async function handleExcluirHorario({
         id,
+        diaId,
     }: {
         id: string;
+        diaId: string;
     }) {
-        "use server";
-        await prisma.horario.delete({
-            where: { id },
-        });
-        revalidateTag("get-horarios");
+        onRemoveHorario({ horarioId: id, diaId });
     }
     return (
         <li
@@ -61,6 +59,7 @@ export function Dia({ id, diaSemana, horarios }: DiaProps) {
                 ? horarios.map((horario, index) => (
                       <HorarioAdmin
                           id={horario.id}
+                          diaId={id}
                           handleResetHorario={
                               handleResetHorario
                           }
@@ -79,16 +78,16 @@ export function Dia({ id, diaSemana, horarios }: DiaProps) {
 
             <ButtonActionAdd
                 callBack={async (horario) => {
-                    "use server";
-
-                    await prisma.horario.create({
-                        data: {
-                            diaId: id,
-                            hora_inicio:
-                                horario?.horario || "00:00",
-                        },
+                    onAddHorario({
+                        diaId: id,
+                        hora_inicio:
+                            horario?.horario || "00:00",
+                        id: "",
+                        nome_cliente: "",
+                        observacao: "",
+                        preenchido: false,
+                        telefone: "",
                     });
-                    revalidateTag("get-horarios");
                 }}
                 className="block mt-4 bg-indigo-700 text-white p-2 rounded w-fit md:col-span-2 lg:col-span-4"
             >

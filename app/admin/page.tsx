@@ -3,6 +3,29 @@ import { HorariosList } from "@/components/admin/HorariosList";
 export const dynamic = "force-dynamic";
 
 export default async function Admin() {
+    let data = null;
+    try {
+        const res = await fetch(
+            `${process.env.NEXT_URL}/api/dias`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    all: true,
+                }),
+                next: {
+                    tags: ["get-horarios"],
+                },
+            }
+        );
+
+        data = (await res.json()) || [];
+    } catch (error) {
+        console.error("Erro ao buscar semanas:", error);
+    }
+
     const getMes = (data: number) => {
         const mesesDoAno = [
             "Janeiro",
@@ -35,7 +58,7 @@ export default async function Admin() {
                     {month}, {year}
                 </h3>
             </div>
-            <HorariosList />
+            <HorariosList data={data} />
         </section>
     );
 }

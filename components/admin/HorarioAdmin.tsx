@@ -11,15 +11,20 @@ export function HorarioAdmin({
     nome,
     tel,
     obs,
+    diaId,
 }: {
     preenchido: boolean;
     hora_inicio: string;
     id: string;
     handleResetHorario: (data: { id: string }) => void;
-    handleExcluirHorario: (data: { id: string }) => void;
+    handleExcluirHorario: (data: {
+        id: string;
+        diaId: string;
+    }) => void;
     nome: string;
     tel: string;
     obs: string;
+    diaId: string;
 }) {
     if (!preenchido) {
         return (
@@ -27,6 +32,7 @@ export function HorarioAdmin({
                 hora_inicio={hora_inicio}
                 handleExcluirHorario={handleExcluirHorario}
                 id={id}
+                diaId={diaId}
             />
         );
     }

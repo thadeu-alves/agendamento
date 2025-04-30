@@ -1,33 +1,21 @@
+"use client";
+
 import { ButtonActionReset } from "@/components/admin/ButtonActionReset";
 import { Dia } from "./Dia";
-import { Dia as DiaProps } from "@/app/page";
-import { revalidateTag } from "next/cache";
+import ButtonAction from "../ButtonAction";
+import { Dia as DiaProps } from "@/lib/data";
+import { useState } from "react";
+import { Horario } from "@/app/page";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export async function HorariosList() {
-    let data = null;
-    try {
-        const res = await fetch(
-            `${process.env.NEXT_URL}/api/dias`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    all: true,
-                }),
-                next: {
-                    tags: ["get-horarios"],
-                },
-            }
-        );
-
-        data = (await res.json()) || [];
-    } catch (error) {
-        console.error("Erro ao buscar semanas:", error);
-    }
+export function HorariosList({
+    data,
+}: {
+    data: DiaProps[];
+}) {
+    const [semana, setSemana] = useState(data);
 
     const getDiaSemana = (data: Date) => {
         const diasDaSemana = [
@@ -44,21 +32,71 @@ export async function HorariosList() {
     };
 
     async function handleReset() {
-        "use server";
         await fetch(`${process.env.NEXT_URL}/api/reset`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
         });
-        revalidateTag("get-horarios");
+    }
+
+    async function handleSalvar() {
+        console.log(process.env.NEXT_URL);
+        await fetch(
+            `${process.env.NEXT_PUBLIC_URL}/api/salvar`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ semana }),
+            }
+        );
+        window.location.reload();
+    }
+
+    function addHorario(novoHorario: Horario) {
+        const novaSemana = semana.map((dia) => {
+            if (dia.id === novoHorario.diaId) {
+                return {
+                    ...dia,
+                    horarios: [
+                        ...dia.horarios,
+                        novoHorario,
+                    ],
+                };
+            }
+            return dia;
+        });
+        setSemana(novaSemana);
+    }
+
+    function removeHorario({
+        diaId,
+        horarioId,
+    }: {
+        diaId: string;
+        horarioId: string;
+    }) {
+        const novaSemana = semana.map((dia) => {
+            if (dia.id === diaId) {
+                return {
+                    ...dia,
+                    horarios: dia.horarios.filter(
+                        (h) => h.id !== horarioId
+                    ),
+                };
+            }
+            return dia;
+        });
+        setSemana(novaSemana);
     }
 
     return (
         <ul className="bg-white p-4 space-y-8 rounded-xl">
             <li className="space-y-4">
                 <h1 className="text-2xl font-bold text-indigo-800">
-                    Você esta em ambiente administrador.
+                    Você está em ambiente administrador.
                 </h1>
                 <h2 className="text-indigo-300">
                     As alterações serão refletidas para os
@@ -66,7 +104,7 @@ export async function HorariosList() {
                 </h2>
             </li>
 
-            {data.map((dia: DiaProps) => {
+            {semana.map((dia) => {
                 const diaSemana = getDiaSemana(dia.data);
                 return (
                     <Dia
@@ -74,17 +112,27 @@ export async function HorariosList() {
                         horarios={dia.horarios}
                         id={dia.id}
                         key={dia.id}
+                        onAddHorario={addHorario}
+                        onRemoveHorario={removeHorario}
                     />
                 );
             })}
 
-            <li>
+            <li className="flex flex-col gap-4">
+                <ButtonAction
+                    callback={handleSalvar}
+                    className={cn(
+                        "bg-indigo-900 text-white mx-auto mt-8 ",
+                        semana == data
+                            ? "bg-gray-200 cursor-not-allowed"
+                            : ""
+                    )}
+                >
+                    Salvar
+                </ButtonAction>
                 <ButtonActionReset
-                    callBack={async () => {
-                        "use server";
-                        handleReset();
-                    }}
-                    className="block bg-red-500 p-2 mt-8 rounded text-white mx-auto"
+                    callBack={handleReset}
+                    className="block bg-red-500 p-2 rounded text-white mx-auto"
                 >
                     Reset Semana
                 </ButtonActionReset>

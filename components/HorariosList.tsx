@@ -2,13 +2,13 @@ import { revalidateTag } from "next/cache";
 import { Horario } from "./Horario";
 
 type Horario = {
-    id: string;
+    id?: string;
     hora_inicio: string;
     preenchido: boolean;
     nome_cliente: string | null;
     telefone: string | null;
     observacao: string | null;
-    diaId: string;
+    diaId?: string;
 };
 
 type Dia = {
@@ -45,7 +45,7 @@ export function HorariosList({
         telefone,
         observacao,
     }: {
-        id: string;
+        id?: string;
         nome: string;
         telefone: string;
         observacao: string;
