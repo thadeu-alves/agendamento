@@ -19,7 +19,7 @@ export interface Dia {
 
 export default async function Home() {
     const res = await fetch(
-        `${process.env.NEXT_URL}/api/dias`,
+        `${process.env.NEXT_PUBLIC_URL}/api/dias`,
         {
             method: "POST",
             headers: {
@@ -33,6 +33,11 @@ export default async function Home() {
             },
         }
     );
+
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Erro ao buscar dados: ${text}`);
+    }
 
     const data = (await res.json()) || [];
 
@@ -59,7 +64,7 @@ export default async function Home() {
     const year = new Date().getFullYear();
 
     return (
-        <div className="bg-indigo-700 space-y-4">
+        <div className="bg-indigo-700 space-y-4 min-h-screen flex flex-col">
             <div className="pt-4">
                 <h1 className=" text-white text-center text-2xl px-4 font-bold md:py-8">
                     Instituição
@@ -68,7 +73,7 @@ export default async function Home() {
                     {month}, {year}
                 </h2>
             </div>
-            <ul className="bg-white p-4 space-y-8 rounded-2xl">
+            <ul className="bg-white p-4 space-y-8 rounded-2xl flex-1">
                 <li>
                     <h1 className=" text-indigo-800 text-center text-2xl px-4 font-bold md:py-8">
                         Olá, veja os horários disponiveis de

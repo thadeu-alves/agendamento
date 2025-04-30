@@ -21,7 +21,7 @@ export default function FormPage() {
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-md mx-auto mt-20 space-y-4"
+            className="max-w-md mx-auto mt-20 space-y-4 p-4"
         >
             <h1 className="text-2xl font-bold">
                 Identifique-se
