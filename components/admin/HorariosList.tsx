@@ -16,6 +16,7 @@ export function HorariosList({
     data: DiaProps[];
 }) {
     const [semana, setSemana] = useState(data);
+    const [loading, setLoading] = useState(false);
 
     const getDiaSemana = (data: Date) => {
         const diasDaSemana = [
@@ -42,6 +43,7 @@ export function HorariosList({
 
     async function handleSalvar() {
         console.log(process.env.NEXT_URL);
+        setLoading(true);
         await fetch(
             `${process.env.NEXT_PUBLIC_URL}/api/salvar`,
             {
@@ -125,10 +127,12 @@ export function HorariosList({
                         "bg-indigo-900 text-white mx-auto mt-8 ",
                         semana == data
                             ? "bg-gray-200 cursor-not-allowed"
+                            : loading
+                            ? "bg-indigo-400"
                             : ""
                     )}
                 >
-                    Salvar
+                    {loading ? "Salvando..." : "Salvar"}
                 </ButtonAction>
                 <ButtonActionReset
                     callBack={handleReset}
