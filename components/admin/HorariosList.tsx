@@ -18,7 +18,7 @@ export function HorariosList({
     const [semana, setSemana] = useState(data);
     const [loading, setLoading] = useState(false);
 
-    const getDiaSemana = (data: Date) => {
+    const getDiaSemana = (today: number) => {
         const diasDaSemana = [
             "Domingo",
             "Segunda-feira",
@@ -28,8 +28,7 @@ export function HorariosList({
             "Sexta-feira",
             "Sábado",
         ];
-        const date = new Date(data);
-        return diasDaSemana[date.getDay()];
+        return diasDaSemana[today];
     };
 
     async function handleReset() {
@@ -106,8 +105,8 @@ export function HorariosList({
                 </h2>
             </li>
 
-            {semana.map((dia) => {
-                const diaSemana = getDiaSemana(dia.data);
+            {semana.map((dia, id) => {
+                const diaSemana = getDiaSemana(id);
                 return (
                     <Dia
                         diaSemana={diaSemana}

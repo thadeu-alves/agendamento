@@ -21,24 +21,14 @@ type Dia = {
 export function HorariosList({
     dia,
     id,
+    diaSemana,
+    today,
 }: {
     dia: Dia;
     id: number;
+    diaSemana: string;
+    today: number;
 }) {
-    const getDiaSemana = (data: Date) => {
-        const diasDaSemana = [
-            "Domingo",
-            "Segunda-feira",
-            "Terça-feira",
-            "Quarta-feira",
-            "Quinta-feira",
-            "Sexta-feira",
-            "Sábado",
-        ];
-        const date = new Date(data);
-        return diasDaSemana[date.getDay()];
-    };
-
     async function handlePreencher({
         id,
         nome,
@@ -71,7 +61,9 @@ export function HorariosList({
         revalidateTag("get-horarios");
     }
 
-    const diaSemana = getDiaSemana(dia.data);
+    if (id < today) {
+        return;
+    }
 
     return (
         <li
@@ -80,7 +72,7 @@ export function HorariosList({
         >
             <h1
                 className={`text-xl font-bold col-span-2 lg:col-span-4 ${
-                    id == 0 ? "text-indigo-400" : ""
+                    id == today ? "text-indigo-400" : ""
                 }`}
             >
                 {diaSemana}:{" "}

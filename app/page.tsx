@@ -17,6 +17,19 @@ export interface Dia {
     horarios: Horario[];
 }
 
+const getDiaSemana = (today: number) => {
+    const diasDaSemana = [
+        "Domingo",
+        "Segunda-feira",
+        "Terça-feira",
+        "Quarta-feira",
+        "Quinta-feira",
+        "Sexta-feira",
+        "Sábado",
+    ];
+    return diasDaSemana[today];
+};
+
 export default async function Home() {
     const res = await fetch(
         `${process.env.NEXT_PUBLIC_URL}/api/dias`,
@@ -26,7 +39,7 @@ export default async function Home() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                all: false,
+                all: true,
             }),
             next: {
                 tags: ["get-horarios"],
@@ -62,6 +75,8 @@ export default async function Home() {
     const monthNumber = new Date().getMonth();
     const month = getMes(monthNumber);
     const year = new Date().getFullYear();
+    const today = new Date().getDay();
+    console.log(today);
 
     return (
         <div className="bg-indigo-700 space-y-4 min-h-screen flex flex-col">
@@ -86,6 +101,8 @@ export default async function Home() {
                             dia={dia}
                             id={id}
                             key={id}
+                            diaSemana={getDiaSemana(id)}
+                            today={today}
                         />
                     );
                 })}
