@@ -1,4 +1,5 @@
-import { revalidateTag } from "next/cache";
+"use client";
+
 import { Horario } from "./Horario";
 
 type Horario = {
@@ -40,7 +41,6 @@ export function HorariosList({
         telefone: string;
         observacao: string;
     }) {
-        "use server";
         fetch("http://localhost:3000/api/preencher", {
             method: "POST",
             headers: {
@@ -57,8 +57,6 @@ export function HorariosList({
             .then((response) => response.json())
             .then((data) => console.log(data))
             .catch((error) => console.error(error));
-
-        revalidateTag("get-horarios");
     }
 
     if (id < today) {

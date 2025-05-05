@@ -1,4 +1,4 @@
-import { HorariosList } from "@/components/HorariosList";
+import Dias from "@/components/Dias";
 
 export interface Horario {
     id: string;
@@ -17,43 +17,7 @@ export interface Dia {
     horarios: Horario[];
 }
 
-const getDiaSemana = (today: number) => {
-    const diasDaSemana = [
-        "Domingo",
-        "Segunda-feira",
-        "Terça-feira",
-        "Quarta-feira",
-        "Quinta-feira",
-        "Sexta-feira",
-        "Sábado",
-    ];
-    return diasDaSemana[today];
-};
-
 export default async function Home() {
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/api/dias`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                all: true,
-            }),
-            next: {
-                tags: ["get-horarios"],
-            },
-        }
-    );
-
-    if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`Erro ao buscar dados: ${text}`);
-    }
-
-    const data = (await res.json()) || [];
-
     const getMes = (data: number) => {
         const mesesDoAno = [
             "Janeiro",
@@ -75,8 +39,6 @@ export default async function Home() {
     const monthNumber = new Date().getMonth();
     const month = getMes(monthNumber);
     const year = new Date().getFullYear();
-    const today = new Date().getDay();
-    console.log(today);
 
     return (
         <div className="bg-indigo-700 space-y-4 min-h-screen flex flex-col">
@@ -95,17 +57,7 @@ export default async function Home() {
                         hoje:
                     </h1>
                 </li>
-                {data.map((dia: Dia, id: number) => {
-                    return (
-                        <HorariosList
-                            dia={dia}
-                            id={id}
-                            key={id}
-                            diaSemana={getDiaSemana(id)}
-                            today={today}
-                        />
-                    );
-                })}
+                <Dias />
             </ul>
         </div>
     );
