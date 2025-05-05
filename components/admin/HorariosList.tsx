@@ -12,8 +12,10 @@ export const dynamic = "force-dynamic";
 
 export function HorariosList({
     data,
+    slug,
 }: {
     data: DiaProps[];
+    slug?: string;
 }) {
     const [semana, setSemana] = useState(data);
     const [loading, setLoading] = useState(false);
@@ -32,12 +34,15 @@ export function HorariosList({
     };
 
     async function handleReset() {
-        await fetch(`${process.env.NEXT_URL}/api/reset`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        await fetch(
+            `${process.env.NEXT_PUBLIC_URL}/api/reset`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
     }
 
     async function handleSalvar() {
@@ -50,7 +55,7 @@ export function HorariosList({
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ semana }),
+                body: JSON.stringify({ semana, slug }),
             }
         );
         window.location.reload();

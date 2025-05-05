@@ -41,25 +41,32 @@ export function HorariosList({
         telefone: string;
         observacao: string;
     }) {
-        fetch("http://localhost:3000/api/preencher", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                horarioId: id,
-                nome,
-                telefone,
-                observacao,
-                key: "sqsaslp1212masasa",
-            }),
-        })
+        fetch(
+            `${process.env.NEXT_PUBLIC_URL}/api/preencher`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    horarioId: id,
+                    nome,
+                    telefone,
+                    observacao,
+                    key: "sqsaslp1212masasa",
+                }),
+            }
+        )
             .then((response) => response.json())
             .then((data) => console.log(data))
             .catch((error) => console.error(error));
     }
 
     if (id < today) {
+        return;
+    }
+
+    if (!dia) {
         return;
     }
 
@@ -70,11 +77,12 @@ export function HorariosList({
         >
             <h1
                 className={`text-xl font-bold col-span-2 lg:col-span-4 ${
-                    id == today ? "text-indigo-400" : ""
+                    id == today ? "text-fuchsia-700" : ""
                 }`}
             >
                 {diaSemana}:{" "}
             </h1>
+
             {dia.horarios.length > 0
                 ? dia.horarios.map((horario, index) => {
                       return (

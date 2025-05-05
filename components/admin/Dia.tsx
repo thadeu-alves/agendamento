@@ -92,7 +92,7 @@ export function Dia({
                 className="block mt-4 bg-indigo-700 text-white p-2 rounded w-fit md:col-span-2 lg:col-span-4"
             >
                 <Image
-                    src="./add.svg"
+                    src="/add.svg"
                     alt="add icon"
                     width={20}
                     height={20}

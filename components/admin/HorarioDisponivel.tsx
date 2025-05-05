@@ -42,7 +42,7 @@ export default function HorarioDisponivel({
                         }}
                     >
                         <Image
-                            src="./trash.svg"
+                            src="/trash.svg"
                             alt="trash icon"
                             width={20}
                             height={20}

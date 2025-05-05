@@ -14,7 +14,7 @@ export default function FormPage() {
         if (nome && telefone) {
             Cookies.set("nome", nome);
             Cookies.set("telefone", telefone);
-            router.push("/");
+            router.push("/sites/bella");
         }
     }
 

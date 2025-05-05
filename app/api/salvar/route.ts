@@ -27,7 +27,6 @@ export async function POST(req: Request) {
                 )
                 .map((horario) => horario.id);
 
-            // Primeiro: deletar os horários obsoletos
             allTransactions.push(
                 prisma.horario.deleteMany({
                     where: horariosIdsFront.length
@@ -43,7 +42,6 @@ export async function POST(req: Request) {
                 })
             );
 
-            // Depois: atualiza ou cria os horários enviados
             for (const horario of dia.horarios) {
                 if (horario.id && horario.id !== "") {
                     allTransactions.push(
